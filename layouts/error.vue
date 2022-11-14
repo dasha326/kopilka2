@@ -6,6 +6,9 @@
     <h1 v-else>
       {{ otherError }}
     </h1>
+    <v-sheet class="d-flex align-center justify-center">
+      <v-img src="/error.png" max-width="300"></v-img>
+    </v-sheet>
     <NuxtLink to="/">
       Home page
     </NuxtLink>
