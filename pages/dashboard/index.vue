@@ -1,5 +1,6 @@
 <template>
     <v-card>
+      75785
 <!--        <InfoList/>-->
 <!--        <v-divider class="mt-10 mb-6"/>-->
 <!--        <CardsList/>-->
@@ -12,7 +13,6 @@
     export default {
         name: "DashboardView",
         components: {CardsList, InfoList},
-        layout: 'withSidebar'
 
     }
 </script>

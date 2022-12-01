@@ -39,8 +39,7 @@
 
         methods: {
             logIn(){
-                console.log(444);
-                this.$store.dispatch('logIn', this.user);
+               this.$store.dispatch('user/logIn', this.user);
             }
         },
     };
