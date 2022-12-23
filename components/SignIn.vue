@@ -1,7 +1,7 @@
 <template>
     <v-form
         ref="form"
-        @submit.prevent="logIn()"
+        @submit.prevent="onLogIn()"
     >
         <v-text-field
             v-model="user.login"
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import {mapActions} from 'vuex';
     export default {
         data: () => ({
             user: {
@@ -38,8 +39,15 @@
         }),
 
         methods: {
-            logIn(){
-               this.$store.dispatch('user/logIn', this.user);
+            ...mapActions('user', ['logIn']),
+
+            async onLogIn(){
+                const user = await this.logIn(this.user);
+                if(user) {
+                    console.log('user', user)
+                    this.$router.push('/dashboard')
+                }
+
             }
         },
     };

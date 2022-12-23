@@ -7,7 +7,7 @@
                     <v-sheet
                         :rounded="true"
                         class="cards-list__card d-flex"
-                        :color="i < currentDay ? '#ddd' : color"
+                        :color="i < todayDay ? '#ddd' : color"
                     >
                         <div class="cards-list-card__title">{{++i}}</div>
                     </v-sheet>
@@ -20,19 +20,12 @@
 <script>
     export default {
         name: "CardsList",
-        data: () => ({
-        }),
-        computed: {
-            days() {
-                return this.$store.getters.getUser.list[0].days;
-            },
-            currentDay() {
-                return this.$store.getters.getUser.list[0].todayDay;
-            },
-            color() {
-                return this.$store.getters.getUser.list[0].color;
-            }
-        }
+
+        props: {
+            todayDay: Number,
+            days: Number,
+            color: String
+        },
     }
 </script>
 

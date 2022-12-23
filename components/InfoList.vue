@@ -12,18 +12,29 @@
 
     export default {
         name: "InfoList",
+        props: {
+            todayDay: Number,
+            days: Number,
+            name: String
+        },
         data: () => ({
 
         }),
         computed: {
+            totalPrice() {
+                return this.calcTotal(this.todayDay)
+            },
+            remainsTotalPrice() {
+                return this.calcTotal(this.days) - this.calcTotal(this.todayDay)
+            },
             totalSavingsText() {
-                return `Вы уже накопили ${this.formatMoney(this.calcTotal(this.$store.getters.getUser.list[0].todayDay), 'руб.')}`
+                return `Вы уже накопили ${this.formatMoney(this.totalPrice, 'руб.')}`
             },
             currentDayText() {
-                return `Сегодня ${this.$store.getters.getUser.list[0].todayDay} день из ${this.$store.getters.getUser.list[0].days} отведенных на ${this.$store.getters.getUser.list[0].name}`
+                return `Сегодня ${this.todayDay} день из ${this.days} отведенных на ${this.name}`
             },
             remainsText(){
-                return `тебе сталось накопть 100000 рублей а 360 дней`
+                return `Тебе сталось накопть ${this.formatMoney(this.remainsTotalPrice, 'руб.')} за ${this.days} ${this.pluralFormat(this.days, 'день', 'дня', 'дней')}`
             }
         },
         methods:{

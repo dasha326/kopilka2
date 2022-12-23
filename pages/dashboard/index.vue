@@ -1,20 +1,19 @@
 <template>
     <v-card>
-      75785
-<!--        <InfoList/>-->
-<!--        <v-divider class="mt-10 mb-6"/>-->
-<!--        <CardsList/>-->
+        <TheList/>
     </v-card>
 </template>
 
 <script>
-    import CardsList from "@/components/CardsList";
-    import InfoList from "@/components/InfoList";
-    export default {
-        name: "DashboardView",
-        components: {CardsList, InfoList},
+import TheList from "@/components/TheList";
 
-    }
+export default {
+    name: "DashboardView",
+    components: {TheList},
+    middleware: ['auth'],
+    layout: 'withSidebar'
+
+}
 </script>
 
 <style scoped>

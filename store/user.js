@@ -21,24 +21,26 @@ export const mutations = {
     },
 }
 export const actions = {
-    async logIn({dispatch, commit}, user) {
-        this.$axios.$post('https://001lg.mocklab.io/user',
-            JSON.stringify(user)
-        )
-            .then(function (response) {
-                commit('SET_IS_AUTH', response);
-                dispatch('getUser');
-
-               // this.$nuxt._router.push('/dashboard');
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    async logIn({dispatch, commit}, signInData) {
+        try {
+           const response = await this.$axios.$post('https://001lg.mocklab.io/user',
+                JSON.stringify(signInData)
+            )
+            if(!response) return null;
+            commit('SET_IS_AUTH', response);
+            const user = dispatch('setUser');
+            return user;
+        } catch (error){
+            console.log(error);
+        }
     },
-    async getUser({commit}) {
-        console.log(5688)
+    async setUser({commit}) {
         const user = await this.$axios.$get('https://001lg.mocklab.io/userProfile');
-        console.log(user)
+        if(!user){
+            commit('SET_USER', null);
+            return null
+        }
         commit('SET_USER', user);
+        return user;
     },
 }
