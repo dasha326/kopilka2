@@ -1,30 +1,34 @@
 <template>
-    <v-card v-if="userList">
+    <v-card class="user-list" v-if="userList">
         <InfoList :todayDay="userList.todayDay" :days="userList.days" :name="userList.name"/>
-        <CardsList :todayDay="userList.todayDay" :days="userList.days" :color="userList.color"/>
+        <CardsList :listName="userList.name" :todayDay="userList.todayDay" :days="userList.days" :color="userList.color"/>
     </v-card>
 </template>
 
 <script>
+import {mapState} from "vuex";
+
 export default {
     name: "listPage",
     layout: 'withSidebar',
     data: () => ({
-        userList: null
     }),
-    async created() {
-        const currentPageId = this.$route.params.id;
-        const user = this.$store.getters['user/getUser'];
-        if (user) {
-            this.userList = user.list[currentPageId]
-        } else {
-            const newUser = await this.$store.dispatch('user/setUser');
-            this.userList = newUser.list[currentPageId];
-        }
-    }
+    computed: {
+        ...mapState('user', ['user', 'isAuth']),
+        userList() {
+            console.log(this.$route)
+            const currentPageId = this.$route.params.id - 1;
+            if (this.user !== null) return this.user.list[currentPageId];
+        },
+    },
 }
 </script>
 
 <style scoped>
-
+    .user-list{
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
 </style>

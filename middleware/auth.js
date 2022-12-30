@@ -1,7 +1,7 @@
 export default function ({store, redirect}){
+    //console.log(window)
     const isAuth = store.getters['user/getAuth'];
-    console.log(isAuth)
     if (!isAuth) {
-        store.dispatch('user/getUser');
+        //store.dispatch('user/getUser');
     }
 }

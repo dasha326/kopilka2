@@ -40,12 +40,12 @@ import {mapActions} from 'vuex';
 
         methods: {
             ...mapActions('user', ['logIn']),
+            ...mapActions(['nuxtServerInit']),
 
             async onLogIn(){
-                const user = await this.logIn(this.user);
-                if(user) {
-                    console.log('user', user)
-                    this.$router.push('/dashboard')
+                const isAuth = await this.logIn(this.user);
+                if(isAuth) {
+                    this.$router.push('/dashboard');
                 }
 
             }

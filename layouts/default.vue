@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import TheHeader from "@/components/TheHeader";
-import TheFooter from "@/components/TheFooter";
+import TheHeader from "~/components/layouts/TheHeader";
+import TheFooter from "~/components/layouts/TheFooter";
 export default {
   name: 'DefaultLayout',
   components: {TheHeader, TheFooter},

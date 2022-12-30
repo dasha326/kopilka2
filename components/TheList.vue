@@ -39,13 +39,13 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapState, mapGetters} from "vuex";
 
 export default {
     name: "TheList",
     data() {
         return {
-            userLists: null
+
         }
     },
     methods: {
@@ -56,22 +56,12 @@ export default {
             this.$router.push(`/dashboard/list/${id}`)
         }
     },
-    // watch: {
-    //     ...mapGetters('user', ['getUser']),
-    //     userList() {
-    //         return this.getUser;
-    //     },
-    // },
-    async created() {
-        const user = this.$store.getters['user/getUser'];
-        console.log(user)
-        if (user) {
-            this.userLists = user.list
-        } else {
-            const newUser = await this.$store.dispatch('user/setUser');
-            this.userLists = newUser.list;
-        }
-    }
+    computed: {
+        ...mapState('user', ['user', 'isAuth']),
+        userLists() {
+            if (this.user !== null) return this.user.list;
+        },
+    },
 }
 </script>
 

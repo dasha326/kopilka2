@@ -13,3 +13,14 @@ export const mutations = {
         state.isDrawer = payload
     }
 }
+
+
+export const actions = {
+    async nuxtServerInit({dispatch}) {
+        let userId = null;
+        if(this.$router.currentRoute.path !== '/'){
+            userId = 1
+        }
+        if (userId !== null) await dispatch('user/getUserById', userId);
+    },
+}

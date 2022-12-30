@@ -32,39 +32,52 @@
                 </template>
                 <v-list-item-title v-text="item.name"></v-list-item-title>
             </v-list-item>
+            <v-sheet class="pa-5">
+                <v-dialog transition="dialog-bottom-transition" max-width="600">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            small
+                            color="secondary"
+                            v-bind="attrs"
+                            v-on="on"
+                        >Добавить новую копилку
+                        </v-btn>
+                    </template>
+                    <template v-slot:default="dialog">
+                        <v-card>
+                            <v-toolbar color="secondary" class="pl-5 pr-5">Создаем новую копилку</v-toolbar>
+                            <v-card-text class="pt-4">
+                                <AddList/>
+                            </v-card-text>
+                        </v-card>
+                    </template>
+                </v-dialog>
+            </v-sheet>
         </v-list>
     </v-navigation-drawer>
 </template>
 
 <script>
-import {mapGetters, mapActions} from "vuex";
-
+import {mapState, mapGetters} from "vuex";
+import AddList from "~/components/forms/AddList";
 export default {
     name: "NavigationDrawer",
+    components: {AddList},
     data() {
         return {
-            userLists: null
+
         }
     },
     computed: {
-        ...mapActions('user', ['setUser']),
-        ...mapGetters('user', ['getUser']),
+        ...mapState('user', ['user']),
         ...mapGetters(['getIsDrawer']),
         isDrawer(){
           return this.getIsDrawer;
         },
-
+        userLists() {
+            if (this.user !== null) return this.user.list;
+        },
     },
-    async created() {
-        const user = this.$store.getters['user/getUser'];
-        console.log(user)
-        if (user) {
-            this.userLists = user.list
-        } else {
-            const newUser = await this.$store.dispatch('user/setUser');
-            this.userLists = newUser.list;
-        }
-    }
 }
 </script>
 
