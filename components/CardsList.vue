@@ -32,7 +32,6 @@ import {mapMutations} from "vuex";
         methods: {
             ...mapMutations('user', ['SET_USER_TODAYDAY']),
             addDay(count){
-                console.log(count)
                 const currentPageId = this.$route.params.id - 1;
 
                 //Если жмешь на предыдущий день

@@ -8,9 +8,6 @@ export const getters = {
     getAuth(state) {
         return state.isAuth;
     },
-    getUser(state) {
-        return state.user;
-    }
 }
 
 export const mutations = {

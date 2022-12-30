@@ -55,11 +55,10 @@
                     "name": this.listName,
                     "icon": "mdi-clock",
                     "color": this.color,
-                    "days": this.days,
+                    "days": parseInt(this.days),
                     "lost": [],
                     "todayDay": 0
                 }
-                console.log(newList)
                 this.addNewList(newList);
             },
 

@@ -14,7 +14,7 @@ export const mutations = {
     }
 }
 
-
+//const cookieparser = process.server ? require('cookieparser') : undefined
 export const actions = {
     async nuxtServerInit({dispatch}) {
         let userId = null;

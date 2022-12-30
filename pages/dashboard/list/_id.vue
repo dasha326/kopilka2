@@ -16,7 +16,6 @@ export default {
     computed: {
         ...mapState('user', ['user', 'isAuth']),
         userList() {
-            console.log(this.$route)
             const currentPageId = this.$route.params.id - 1;
             if (this.user !== null) return this.user.list[currentPageId];
         },
