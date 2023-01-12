@@ -2,7 +2,7 @@
     <v-navigation-drawer
         app
         clipped
-        :value="isDrawer"
+        :value="isDrawerOpen"
     >
         <v-list density="compact">
             <v-sheet
@@ -20,8 +20,8 @@
             <v-divider></v-divider>
             <h2 class="pl-5 pt-5">Мои копилки</h2>
 
-            <v-list-item
-                v-for="(item, i) in userLists"
+            <v-list-item v-if="currentUserLists"
+                v-for="(item, i) in currentUserLists"
                 :key="item.name+i"
                 :value="item"
                 active-color="primary"
@@ -69,13 +69,13 @@ export default {
         }
     },
     computed: {
-        ...mapState('user', ['user']),
-        ...mapGetters(['getIsDrawer']),
-        isDrawer(){
-          return this.getIsDrawer;
+        ...mapState(['isDrawer']),
+        ...mapGetters('user', ['userLists']),
+        isDrawerOpen(){
+          return this.isDrawer;
         },
-        userLists() {
-            if (this.user !== null) return this.user.list;
+        currentUserLists() {
+           return this.userLists
         },
     },
 }

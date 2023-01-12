@@ -9,7 +9,7 @@
 </template>
 
 <script>
-
+import {pluralFormat, formatMoney, calcTotal} from '@/tools'
     export default {
         name: "InfoList",
         props: {
@@ -17,27 +17,24 @@
             days: Number,
             name: String
         },
-        data: () => ({
-
-        }),
         computed: {
             totalPrice() {
-                return this.calcTotal(this.todayDay)
+                return calcTotal(this.todayDay)
             },
             remainsTotalPrice() {
-                return this.calcTotal(this.days) - this.calcTotal(this.todayDay)
+                return calcTotal(this.days) - calcTotal(this.todayDay)
             },
             remainsTotalDays() {
                 return this.days - this.todayDay;
             },
             totalSavingsText() {
-                return `Вы уже накопили ${this.formatMoney(this.totalPrice, 'руб.')}`
+                return `Вы уже накопили ${formatMoney(this.totalPrice, 'руб.')}`
             },
             currentDayText() {
                 return `Сегодня ${this.todayDay} день из ${this.days} отведенных на ${this.name}`
             },
             remainsText(){
-                return `Тебе сталось накопть ${this.formatMoney(this.remainsTotalPrice, 'руб.')} за ${this.remainsTotalDays} ${this.pluralFormat(this.remainsTotalDays, 'день', 'дня', 'дней')}`
+                return `Тебе сталось накопть ${formatMoney(this.remainsTotalPrice, 'руб.')} за ${this.remainsTotalDays} ${pluralFormat(this.remainsTotalDays, 'день', 'дня', 'дней')}`
             }
         },
         methods:{

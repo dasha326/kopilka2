@@ -1,7 +1,8 @@
 <template>
     <v-form
         ref="form"
-        @submit.prevent="submitData()">
+        @submit.prevent=""
+    >
         <v-text-field
             class="mt-4"
             :error-messages="nameErrors"
@@ -53,10 +54,12 @@
             placeholder="##.##.####"
             label="Дата рождения"/>
         <v-btn
-            color="purple"
-            class="mr-4"
             type="submit"
-        >Зарегистрироваться</v-btn>
+            color="purple"
+            class="mt-4"
+        >
+            Создать
+        </v-btn>
     </v-form>
 </template>
 
@@ -67,6 +70,7 @@ import {mapActions} from "vuex";
 import {mask} from 'vue-the-mask';
 
 export default {
+    name: 'ProfileForm',
     mixins: [validationMixin],
     directives: {mask},
     validations: {
@@ -153,3 +157,5 @@ export default {
     },
 };
 </script>
+<style lang="scss" scoped>
+</style>

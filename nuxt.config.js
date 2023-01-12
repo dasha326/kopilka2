@@ -3,6 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
     // Target: https://go.nuxtjs.dev/config-target
     target: 'static',
+    ssr: false,
     loading: {
         color: 'blue',
         height: '5px'
@@ -29,7 +30,10 @@ export default {
     css: [],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['~/plugins/globalMixins'],
+    plugins: [
+        '~/plugins/nuxtClientInit',
+        '~/plugins/vuelidate'
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -42,7 +46,8 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-        '@nuxtjs/axios'
+        '@nuxtjs/axios',
+        'cookie-universal-nuxt',
     ],
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

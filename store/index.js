@@ -1,26 +1,23 @@
 export const state = () => ({
     isDrawer: true,
-    alertError: ''
 })
 
 export const getters = {
-    getIsDrawer(state) {
-        return state.isDrawer
-    },
 }
 export const mutations = {
     SET_DRAWER(state, payload) {
-        state.isDrawer = payload
+        state.isDrawer = payload;
     }
 }
 
-//const cookieparser = process.server ? require('cookieparser') : undefined
 export const actions = {
-    async nuxtServerInit({dispatch}) {
-        let userId = null;
-        if(this.$router.currentRoute.path !== '/'){
-            userId = 1
+    async nuxtClientInit({dispatch}) {
+        const cookie = document.cookie.match(/(userId=)\d+/ig, '');
+        if(Boolean(cookie)){
+            const userId = cookie[0].split('=')[1];
+            await dispatch('user/getUserById', userId);
+        } else {
+            await dispatch('user/getUserById', null);
         }
-        if (userId !== null) await dispatch('user/getUserById', userId);
     },
 }

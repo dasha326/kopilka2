@@ -1,3 +1,4 @@
+import {setCookie} from "@/tools";
 export const state = () => ({
     isAuth: false,
     user: null,
@@ -5,9 +6,24 @@ export const state = () => ({
 })
 
 export const getters = {
-    getAuth(state) {
-        return state.isAuth;
+    userName(state){
+        console.log(111)
+        let name = '';
+        if (state.user.preName) name += state.user.preName;
+        if (state.user.name === '') {
+            name += state.user.login;
+        } else {
+            name += state.user.name;
+        }
+        console.log(name)
+        return name;
     },
+    userLists(state){
+        if (state.user !== null) return state.user.list;
+    },
+    userList(state, count){
+        if (state.user !== null) return state.user.list[parseInt(count)];
+    }
 }
 
 export const mutations = {
@@ -28,39 +44,55 @@ export const mutations = {
     }
 }
 export const actions = {
-    async logIn({dispatch, commit}, signInData) {
+    async checkUser({dispatch, commit}, signInData) {
         try {
-           const response = await this.$axios.$post('https://001lg.mocklab.io/user',
+           const response = await this.$axios.$post('https://1r10d.wiremockapi.cloud/user',
                 JSON.stringify(signInData)
             )
             if(!response) return null;
-            dispatch('getUserById', response);
-            localStorage.setItem('userId', response);
+            dispatch('getUserById', response.id);
             return true;
         } catch (error){
-            console.log(error);
+            console.error(error);
+            return false;
         }
     },
-    logOut({commit}) {
-        commit('SET_USER', null);
-        commit('SET_IS_AUTH', false);
-    },
-    async getUserById({commit}, id) {
-        const user = await this.$axios.$get('https://001lg.mocklab.io/userProfile');
-        if(!user){
-            commit('SET_USER', null);
-            commit('SET_USER_ID', null);
-            commit('SET_IS_AUTH', false);
-            this.$router.push('/');
-        }
-
+    logIn({commit}, user, id) {
         commit('SET_USER', user);
         commit('SET_USER_ID', id);
         commit('SET_IS_AUTH', true);
+        setCookie('userId', id, {
+            'max-age': -1
+        })
     },
-    addNewList({state, commit}, newList){
+    logOut({commit}) {
+        commit('SET_USER', null);
+        commit('SET_USER_ID', null);
+        commit('SET_IS_AUTH', false);
+        setCookie('userId', "", {
+            'max-age': -1
+        })
+    },
+    async getUserById({commit, dispatch}, id) {
+        if(id === null){
+            dispatch('logOut');
+            this.$router.push('/');
+        } else {
+            const user = await this.$axios.$get('https://1r10d.wiremockapi.cloud/userProfile');
+            if (!user){
+                dispatch('logOut');
+                return
+            }
+            dispatch('logIn', user, id);
+        }
+
+    },
+    addNewList({state, commit, dispatch}, newList){
         commit('ADD_NEW_LIST', newList);
-        console.log(state.user.list.length)
         this.$router.push(`/dashboard/list/${state.user.list.length}`);
+    },
+    addNewUser({dispatch}, user) {
+        dispatch('logIn', user, 2);
+        this.$router.push('/dashboard')
     }
 }

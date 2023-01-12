@@ -15,7 +15,7 @@
                 active-class="pink--text"
                 multiple
             >
-                <template v-for="(item, index) in userLists">
+                <template v-for="(item, index) in currentUserLists">
                     <v-list-item :key="item.name" @click="linkGo(index+1)">
                         <template v-slot:default="{ active }">
                             <v-list-item-content>
@@ -29,7 +29,7 @@
                     </v-list-item>
 
                     <v-divider
-                        v-if="index < userLists.length - 1"
+                        v-if="index < currentUserLists.length - 1"
                         :key="index"
                     ></v-divider>
                 </template>
@@ -39,15 +39,10 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
     name: "TheList",
-    data() {
-        return {
-
-        }
-    },
     methods: {
         daysNamed(day) {
             if (day) return `${day} день`
@@ -57,9 +52,9 @@ export default {
         }
     },
     computed: {
-        ...mapState('user', ['user', 'isAuth']),
-        userLists() {
-            if (this.user !== null) return this.user.list;
+        ...mapGetters('user', ['userLists']),
+        currentUserLists() {
+           return this.userLists;
         },
     },
 }

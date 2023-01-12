@@ -9,7 +9,7 @@
             </v-list-item-avatar>
 
             <v-list-item-content>
-                <v-list-item-title>{{currentUser.name}}</v-list-item-title>
+                <v-list-item-title @click="$router.push('/dashboard/profile')">{{currentUserName}}</v-list-item-title>
                 <v-list-item-subtitle>
                     <v-btn class="pa-0" x-small tail @click="userLogOut">
                         Выйти
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import {mapState, mapActions, mapGetters} from "vuex";
 
 export default {
     name: "TheHeader",
@@ -47,12 +47,14 @@ export default {
         }
     },
     computed: {
-        ...mapState('user', ['isAuth', 'user']),
+        ...mapState('user', ['isAuth']),
+        ...mapGetters('user', ['userName']),
         userIsAuth() {
             return this.isAuth;
         },
-        currentUser() {
-            return this.user;
+        currentUserName() {
+            console.log(this.userName)
+            return this.userName;
         }
     }
 }
