@@ -3,20 +3,20 @@ export const state = () => ({
     isAuth: false,
     user: null,
     userId: null
-})
+});
 
 export const getters = {
     userName(state){
-        console.log(111)
-        let name = '';
-        if (state.user.preName) name += state.user.preName;
-        if (state.user.name === '') {
-            name += state.user.login;
-        } else {
-            name += state.user.name;
+        if (state.user !== null){
+            let name = '';
+            if (state.user.preName) name += state.user.preName;
+            if (state.user.name === '') {
+                name += state.user.login;
+            } else {
+                name += state.user.name;
+            }
+            return name;
         }
-        console.log(name)
-        return name;
     },
     userLists(state){
         if (state.user !== null) return state.user.list;
@@ -24,7 +24,7 @@ export const getters = {
     userList(state, count){
         if (state.user !== null) return state.user.list[parseInt(count)];
     }
-}
+};
 
 export const mutations = {
     SET_IS_AUTH(state, payload) {
@@ -39,16 +39,28 @@ export const mutations = {
     SET_USER_TODAYDAY(state, payload) {
         state.user.list[payload.currentPageId].todayDay = Number(payload.count)
     },
+    //Todo: как лучше в одину мутацию или каждый паметре списка отдельно
+    /*CHANGE_USER_LIST_NAME(state, {id, value}){
+        state.user.list[id].name = value;
+    },*/
+    CHANGE_USER_LIST(state, {listId, listName, listColor, listDays}){
+        console.log(listId, listName, listColor, listDays);
+        // const currentList = state.user.list[listId];
+        // console.log(listId, listName,listColor, listDays);
+        // if(currentList.name !== null) currentList.name = listName;
+        // if(currentList.color !== null) currentList.color = listColor;
+        // if(currentList.days !== null) currentList.days = listDays;
+    },
     ADD_NEW_LIST(state, payload) {
         state.user.list.push(payload);
     }
-}
+};
 export const actions = {
     async checkUser({dispatch, commit}, signInData) {
         try {
            const response = await this.$axios.$post('https://1r10d.wiremockapi.cloud/user',
                 JSON.stringify(signInData)
-            )
+            );
             if(!response) return null;
             dispatch('getUserById', response.id);
             return true;
@@ -57,13 +69,13 @@ export const actions = {
             return false;
         }
     },
-    logIn({commit}, user, id) {
+    logIn({commit}, {user, id}) {
         commit('SET_USER', user);
         commit('SET_USER_ID', id);
         commit('SET_IS_AUTH', true);
         setCookie('userId', id, {
             'max-age': -1
-        })
+        });
     },
     logOut({commit}) {
         commit('SET_USER', null);
@@ -83,7 +95,8 @@ export const actions = {
                 dispatch('logOut');
                 return
             }
-            dispatch('logIn', user, id);
+            console.log(id);
+            dispatch('logIn', {user, id});
         }
 
     },
@@ -95,4 +108,4 @@ export const actions = {
         dispatch('logIn', user, 2);
         this.$router.push('/dashboard')
     }
-}
+};

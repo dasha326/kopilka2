@@ -1,5 +1,12 @@
 export const state = () => ({
     isDrawer: true,
+    baseColors:[
+        ['#FFEB3B', '#FFC107', '#FF9800'],
+        ['#CDDC39', '#8BC34A', '#4CAF50'],
+        ['#F44336', '#E91E63', '#9C27B0'],
+        ['#2196F3', '#00BCD4', '#009688'],
+        ['#0000FF', '#0000AA', '#000055'],
+    ],
 })
 
 export const getters = {

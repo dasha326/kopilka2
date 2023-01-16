@@ -4,14 +4,7 @@
         <v-sheet :rounded="true" class="cards__list pa-5" elevation="3">
             <v-row class="cards-list__row">
                 <v-col class="cards-list__item" v-for="(item, i) in Array.from({length: days})" :key="i" sm="2" lg="1" cols="6">
-                    <v-sheet
-                        :rounded="true"
-                        class="cards-list__card d-flex"
-                        :color="i < todayDay ? '#ddd' : color"
-                        @click="addDay(i)"
-                    >
-                        <div class="cards-list-card__title">{{++i}}</div>
-                    </v-sheet>
+                    <NumberCard :color="i < todayDay ? '#ddd' : color" :number="++i" @click="addDay(i)"/>
                 </v-col>
             </v-row>
         </v-sheet>
@@ -19,10 +12,11 @@
 </template>
 
 <script>
-import {mapMutations} from "vuex";
+    import NumberCard from "~/components/NumberCard";
+    import {mapMutations} from "vuex";
     export default {
         name: "CardsList",
-
+        components: {NumberCard},
         props: {
             listName: String,
             todayDay: Number,
@@ -51,17 +45,6 @@ import {mapMutations} from "vuex";
         flex-direction: column;
         &__list{
             overflow-y: scroll;
-        }
-        &-list {
-            &__card {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                aspect-ratio: 1/1;
-                font-size: 20px;
-                font-weight: 700;
-                cursor: pointer;
-            }
         }
     }
 </style>

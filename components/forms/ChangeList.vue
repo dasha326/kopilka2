@@ -1,7 +1,7 @@
 <template>
     <v-form
         ref="form"
-        @submit.prevent="createList()"
+        @submit.prevent="changeList()"
     >
         <v-text-field
             class="mt-4"
@@ -15,16 +15,22 @@
             @blur="$v.listName.$touch()"
         ></v-text-field>
         <h4 class="pt-4 pb-4">Выберите цвет копилки</h4>
-        <v-color-picker
-            dot-size="17"
-            hide-mode-switch
-            hide-sliders
-            hide-inputs
-            mode="hexa"
-            show-swatches
-            swatches-max-height="100"
-            v-model="color"
-        ></v-color-picker>
+        <v-row>
+            <v-col>
+                <v-color-picker
+                    dot-size="17"
+                    hide-mode-switch
+                    hide-inputs
+                    :swatches="swatches"
+                    show-swatches
+                    v-model="color"
+                ></v-color-picker>
+            </v-col>
+            <v-col>
+                <NumberCard :color="color" :number="Number(days)"/>
+                <!--Number или parseInt-->
+            </v-col>
+        </v-row>
         <v-text-field
             v-model="days"
             name="number"
@@ -38,17 +44,19 @@
             color="purple"
             class="mt-4"
         >
-            Создать
+            Сохранить
         </v-btn>
     </v-form>
 </template>
 
 <script>
-    import {mapState, mapActions} from 'vuex';
+    import NumberCard from "~/components/NumberCard";
+    import {mapState, mapMutations} from 'vuex';
     import { validationMixin } from 'vuelidate'
     import { required, maxLength, minLength} from 'vuelidate/lib/validators'
     export default {
         mixins: [validationMixin],
+        components: {NumberCard},
         validations: {
             listName: {
                 required,
@@ -56,13 +64,20 @@
                 minLength: minLength(2)
             }
         },
-        data: () => ({
-            listName: '',
-            color: '',
-            days: 360,
-            listNameMaxLength: 40,
-        }),
+        props: ['listId', 'defaultName', 'defaultColor', 'defaultDays'],
+        data() {
+            return {
+                listName: this.defaultName,
+                color: this.defaultColor,
+                days: this.defaultDays,
+                listNameMaxLength: 40,
+            }
+        },
         computed: {
+            ...mapState(['baseColors']),
+            swatches() {
+                return this.baseColors
+            },
             listNameErrors () {
                 const errors = [];
                 if (!this.$v.listName.$dirty) return errors;
@@ -72,21 +87,13 @@
             }
         },
         methods: {
-            ...mapState('user', ['user']),
-            ...mapActions('user', ['addNewList']),
+            ...mapMutations('user', ['CHANGE_USER_LIST']),
 
-            createList() {
+            changeList() {
                 this.$v.$touch();
                 if (!this.$v.$invalid) {
-                    const newList = {
-                        "name": this.listName,
-                        "icon": "mdi-clock",
-                        "color": this.color,
-                        "days": parseInt(this.days),
-                        "lost": [],
-                        "todayDay": 0
-                    }
-                    this.addNewList(newList);
+                    console.log(this.listId, this.listName, this.color, this.days);
+                    this.CHANGE_USER_LIST(this.listId, this.listName, this.color, this.days);
                 }
 
             },
