@@ -18,11 +18,19 @@ export const getters = {
             return name;
         }
     },
+    userImage(state) {
+        if (state.user !== null) {
+            let img = '';
+            if (state.user.img !== null) {
+                img = state.user.img;
+            } else {
+                img = '/no-avatar.svg';
+            }
+            return img
+        }
+    },
     userLists(state){
         if (state.user !== null) return state.user.list;
-    },
-    userList(state, count){
-        if (state.user !== null) return state.user.list[parseInt(count)];
     }
 };
 

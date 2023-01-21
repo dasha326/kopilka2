@@ -4,8 +4,8 @@
         <v-toolbar-title>{{ title }}</v-toolbar-title>
         <v-spacer/>
         <v-list-item two-line v-if="userIsAuth">
-            <v-list-item-avatar>
-                <img src="https://randomuser.me/api/portraits/women/81.jpg">
+            <v-list-item-avatar @click="$router.push('/dashboard/profile')">
+                <img :src="currentUserImage" :alt="currentUserName">
             </v-list-item-avatar>
 
             <v-list-item-content>
@@ -47,14 +47,16 @@ export default {
         }
     },
     computed: {
-        ...mapState('user', ['isAuth']),
-        ...mapGetters('user', ['userName']),
+        ...mapState('user', ['isAuth', 'user']),
+        ...mapGetters('user', ['userName', 'userImage']),
         userIsAuth() {
             return this.isAuth;
         },
         currentUserName() {
-            console.log(this.userName)
             return this.userName;
+        },
+        currentUserImage(){
+            return this.userImage;
         }
     }
 }

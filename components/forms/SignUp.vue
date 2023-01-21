@@ -138,6 +138,7 @@ export default {
                     preName: this.preName || '',
                     email: this.email,
                     birth: this.birth || '',
+                    img: null,
                     list: null
                 }
                 console.log(user)
