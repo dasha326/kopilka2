@@ -39,17 +39,15 @@ export const mutations = {
     SET_USER_TODAYDAY(state, payload) {
         state.user.list[payload.currentPageId].todayDay = Number(payload.count)
     },
-    //Todo: как лучше в одину мутацию или каждый паметре списка отдельно
-    /*CHANGE_USER_LIST_NAME(state, {id, value}){
-        state.user.list[id].name = value;
-    },*/
-    CHANGE_USER_LIST(state, {listId, listName, listColor, listDays}){
-        console.log(listId, listName, listColor, listDays);
-        // const currentList = state.user.list[listId];
-        // console.log(listId, listName,listColor, listDays);
-        // if(currentList.name !== null) currentList.name = listName;
-        // if(currentList.color !== null) currentList.color = listColor;
-        // if(currentList.days !== null) currentList.days = listDays;
+    CHANGE_LIST_BY_ID(state, {listId, listName, listColor, listDays}){
+        console.log('listId', listId)
+        const currentList = state.user.list[listId];
+        if(currentList.name !== null) currentList.name = listName;
+        if(currentList.color !== null) currentList.color = listColor;
+        if(currentList.days !== null) currentList.days = parseInt(listDays);
+    },
+    DELETE_LIST_BY_ID(state, listId){
+        state.user.list.splice(listId, 1);
     },
     ADD_NEW_LIST(state, payload) {
         state.user.list.push(payload);
@@ -74,7 +72,7 @@ export const actions = {
         commit('SET_USER_ID', id);
         commit('SET_IS_AUTH', true);
         setCookie('userId', id, {
-            'max-age': -1
+            'max-age': 36000
         });
     },
     logOut({commit}) {
@@ -105,7 +103,7 @@ export const actions = {
         this.$router.push(`/dashboard/list/${state.user.list.length}`);
     },
     addNewUser({dispatch}, user) {
-        dispatch('logIn', user, 2);
+        dispatch('logIn', {user, id: 2});
         this.$router.push('/dashboard')
     }
 };

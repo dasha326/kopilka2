@@ -34,7 +34,7 @@ import {pluralFormat, formatMoney, calcTotal} from '@/tools'
                 return `Сегодня ${this.todayDay} день из ${this.days} отведенных на ${this.name}`
             },
             remainsText(){
-                return `Тебе сталось накопть ${formatMoney(this.remainsTotalPrice, 'руб.')} за ${this.remainsTotalDays} ${pluralFormat(this.remainsTotalDays, 'день', 'дня', 'дней')}`
+                return `Тебе сталось накопить ${formatMoney(this.remainsTotalPrice, 'руб.')} за ${this.remainsTotalDays} ${pluralFormat(this.remainsTotalDays, 'день', 'дня', 'дней')}`
             }
         },
         methods:{

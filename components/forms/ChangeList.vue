@@ -39,13 +39,64 @@
             class="mt-5"
         ></v-text-field>
 
-        <v-btn
-            type="submit"
-            color="purple"
-            class="mt-4"
-        >
-            Сохранить
-        </v-btn>
+        <v-row justify="space-between">
+            <v-col cols="auto">
+                <v-btn
+                    type="submit"
+                    color="purple"
+                    class="mt-4"
+                >
+                    Сохранить
+                </v-btn>
+            </v-col>
+            <v-col cols="auto">
+                <v-btn
+                    type="button"
+                    color="error"
+                    class="mt-4"
+                    @click.stop="delDialog = true"
+                >
+                    Удалить копилку
+                </v-btn>
+                <v-dialog
+                    v-model="delDialog"
+                    max-width="300"
+                >
+                    <v-card>
+                        <v-card-title class="text-h5 mb-3">Уверен что хочешь удалить копилку?</v-card-title>
+
+                        <v-card-text v-if="isManyDays">
+                            Не сдавайся, тебе осталось всего {{remainingDays}} дней. А это уже {{percentDays}}% от вашей цели
+                        </v-card-text>
+                        <v-card-text v-else>
+                            Если вы согласитесь, то удалите копилку навсегда
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+
+                            <v-btn
+                                type="button"
+                                color="green darken-1"
+                                text
+                                @click="deleteList()"
+                            >
+                                Точно удалить
+                            </v-btn>
+
+                            <v-btn
+                                type="button"
+                                color="red darken-1"
+                                text
+                                @click="delDialog = false"
+                            >
+                                Не удалять
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-col>
+        </v-row>
     </v-form>
 </template>
 
@@ -64,9 +115,11 @@
                 minLength: minLength(2)
             }
         },
-        props: ['listId', 'defaultName', 'defaultColor', 'defaultDays'],
+        emits: ['closeChangeDialog'],
+        props: ['listId', 'defaultName', 'defaultColor', 'defaultDays', 'defaultCurrentDays'],
         data() {
             return {
+                delDialog: false,
                 listName: this.defaultName,
                 color: this.defaultColor,
                 days: this.defaultDays,
@@ -84,22 +137,45 @@
                 !this.$v.listName.maxLength && errors.push(`Название должно быть не более ${this.listNameMaxLength} символов`);
                 !this.$v.listName.required && errors.push('Название нужно заполнить');
                 return errors
+            },
+            remainingDays(){
+                return this.defaultDays - this.defaultCurrentDays;
+            },
+            percentDays(){
+                return Math.round(this.defaultCurrentDays * 100 / this.defaultDays);
+            },
+            isManyDays(){
+                return this.percentDays > 20;
             }
         },
         methods: {
-            ...mapMutations('user', ['CHANGE_USER_LIST']),
+            ...mapMutations('user', ['CHANGE_LIST_BY_ID', 'DELETE_LIST_BY_ID']),
 
             changeList() {
                 this.$v.$touch();
                 if (!this.$v.$invalid) {
-                    console.log(this.listId, this.listName, this.color, this.days);
-                    this.CHANGE_USER_LIST(this.listId, this.listName, this.color, this.days);
+                    console.log(this.listId)
+                    this.CHANGE_LIST_BY_ID({
+                        listId: this.listId,
+                        listName: this.listName,
+                        listColor: this.color,
+                        listDays: this.days
+                    });
+                    this.$emit('closeChangeDialog')
                 }
 
             },
+            deleteList() {
+                this.DELETE_LIST_BY_ID(this.listId);
+                this.delDialog = false;
+                this.$emit('closeChangeDialog')
+            }
 
         },
     };
 </script>
 <style lang="scss" scoped>
+    .v-card__title{
+        word-break: normal;
+    }
 </style>

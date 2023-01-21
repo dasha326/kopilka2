@@ -40,7 +40,7 @@
                             <v-card>
                                 <v-toolbar color="secondary" class="pl-5 pr-5">Редактировать копилку</v-toolbar>
                                 <v-card-text class="pt-4">
-                                    <ChangeList :defaultName="item.name" :defaultColor="item.color" :defaultDays="item.days" :listId="++i"/>
+                                    <ChangeList :defaultName="item.name" :defaultColor="item.color" :defaultDays="item.days" :listId="i" :defaultCurrentDays="item.todayDay" @closeChangeDialog="dialog.value = false"/>
                                 </v-card-text>
                             </v-card>
                         </template>
@@ -93,7 +93,7 @@
             },
             currentUserLists() {
                 return this.userLists
-            }
+            },
         }
     }
 </script>

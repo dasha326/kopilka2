@@ -20,6 +20,7 @@ export const mutations = {
 export const actions = {
     async nuxtClientInit({dispatch}) {
         const cookie = document.cookie.match(/(userId=)\d+/ig, '');
+        console.log(cookie)
         if(Boolean(cookie)){
             const userId = cookie[0].split('=')[1];
             await dispatch('user/getUserById', userId);

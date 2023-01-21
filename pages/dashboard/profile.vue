@@ -1,10 +1,18 @@
 <template>
     <v-layout column>
         <v-card>
+            <v-row>
+                <v-col>
+
+                </v-col>
+                <v-col>
+
+                </v-col>
+            </v-row>
             <v-card-text>
                 <v-flex class="mb-4">
                     <v-avatar size="96" class="mr-4">
-                        <img :src="'/avatars/avatar_' + (form.avatar.toLowerCase()) + '.png'" alt="Avatar">
+<!--                        <img :src="'/avatars/avatar_' + (form.avatar.toLowerCase()) + '.png'" alt="Avatar">-->
                     </v-avatar>
                     <v-btn @click="openAvatarPicker">Change Avatar</v-btn>
                 </v-flex>

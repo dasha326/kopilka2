@@ -80,7 +80,6 @@
                 if (!this.$v.$invalid) {
                     const newList = {
                         "name": this.listName,
-                        "icon": "mdi-clock",
                         "color": this.color,
                         "days": parseInt(this.days),
                         "lost": [],
