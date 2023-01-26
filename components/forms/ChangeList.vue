@@ -154,7 +154,6 @@
             changeList() {
                 this.$v.$touch();
                 if (!this.$v.$invalid) {
-                    console.log(this.listId)
                     this.CHANGE_LIST_BY_ID({
                         listId: this.listId,
                         listName: this.listName,

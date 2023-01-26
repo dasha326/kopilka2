@@ -1,90 +1,98 @@
 <template>
-    <v-layout column>
+    <v-card class="column-card">
+        <v-row>
+            <v-col>
+                <v-card
+                    max-width="300"
+                    class="mx-auto"
+                >
+                    <v-img
+                        :src="currentUserImage"
+                        height="310px"
+                        dark
+                    ></v-img>
+                    <v-card-title class="">
+                        <div class="text-h4 ">
+                            {{currentUserName}}
+                        </div>
+                    </v-card-title>
+                    <v-list two-line>
+                        <v-list-item>
+                            <v-list-item-icon>
+                                <v-icon color="indigo">
+                                    mdi-email
+                                </v-icon>
+                            </v-list-item-icon>
 
-        <v-card>
-            <v-row>
-                <v-col>
-                    <v-card
-                        max-width="375"
-                        class="mx-auto"
-                    >
-                        <v-img
-                            :src="currentUserImage"
-                            height="300px"
-                            dark
-                        ></v-img>
-                        <v-card-title class="">
-                            <div class="text-h4 ">
-                                {{currentUserName}}
-                            </div>
-                        </v-card-title>
-                        <v-list two-line>
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="indigo">
-                                        mdi-email
-                                    </v-icon>
-                                </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>{{currentUser.email}}</v-list-item-title>
+                                <v-list-item-subtitle>Почта</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
 
-                                <v-list-item-content>
-                                    <v-list-item-title>{{currentUser.email}}</v-list-item-title>
-                                    <v-list-item-subtitle>Почта</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
+                        <v-divider inset></v-divider>
 
-                            <v-divider inset></v-divider>
+                        <v-list-item>
+                            <v-list-item-icon>
+                                <v-icon color="indigo">
+                                    mdi-calendar
+                                </v-icon>
+                            </v-list-item-icon>
 
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="indigo">
-                                        mdi-calendar
-                                    </v-icon>
-                                </v-list-item-icon>
+                            <v-list-item-content>
+                                <v-list-item-title>{{currentUser.birth}}</v-list-item-title>
+                                <v-list-item-subtitle>Дата рождения</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
 
-                                <v-list-item-content>
-                                    <v-list-item-title>{{currentUser.birth}}</v-list-item-title>
-                                    <v-list-item-subtitle>Дата рождения</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
+                        <v-divider inset></v-divider>
 
-                            <v-divider inset></v-divider>
+                        <v-list-item>
+                            <v-list-item-icon>
+                                <v-icon color="indigo">
+                                    mdi-chart-box-outline
+                                </v-icon>
+                            </v-list-item-icon>
 
-                            <v-list-item>
-                                <v-list-item-icon>
-                                    <v-icon color="indigo">
-                                        mdi-chart-box-outline
-                                    </v-icon>
-                                </v-list-item-icon>
-
-                                <v-list-item-content>
-                                    <v-list-item-title>{{currentUser.list.length}}</v-list-item-title>
-                                    <v-list-item-subtitle>Копилки</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-list>
-                    </v-card>
-                </v-col>
-                <v-col>
-                    <v-card-text>
-                        <v-flex class="mb-4">
-                            <v-avatar size="96" class="mr-4">
-                                <!--                        <img :src="'/avatars/avatar_' + (form.avatar.toLowerCase()) + '.png'" alt="Avatar">-->
-                            </v-avatar>
-                            <v-btn @click="openAvatarPicker">Change Avatar</v-btn>
-                        </v-flex>
-                        <ProfileForm/>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-btn color="primary" :loading="loading" @click.native="update">
-                            <v-icon left dark>check</v-icon>
-                            Save Changes
+                            <v-list-item-content>
+                                <v-list-item-title>{{currentUser.list.length}}</v-list-item-title>
+                                <v-list-item-subtitle>Копилки</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
+            </v-col>
+            <v-col>
+                <v-card-text>
+                    <v-flex class="mb-4">
+                        <v-avatar size="96" class="mr-4">
+                            <img :src="updatedImage" alt="Avatar">
+                        </v-avatar>
+                        <button></button>
+                        <v-btn>
+                            <input id="file"
+                                   type="file"
+                                   ref="file"
+                                   name="uploadFieldName"
+                                   @change="onFileChange($event.target.files)"
+                                   style="">
+                            <label for="file" >{{updateImageBtnText}}</label>
                         </v-btn>
-                    </v-card-actions>
-                </v-col>
-            </v-row>
-        </v-card>
-
-    </v-layout>
+                    </v-flex>
+                    <v-expansion-panels>
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                Изменить информацию о себе
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content>
+<!--                                <ProfileForm/>-->
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+                </v-card-text>
+            </v-col>
+        </v-row>
+    </v-card>
 </template>
 
 <script>
@@ -96,17 +104,20 @@ export default {
     components: {ProfileForm},
     data () {
         return {
-            loading: false,
-
-            showAvatarPicker: false
+            updatedImage: this.currentUserImage,
+            updateImageBtnText: 'Изменить аватар'
         }
     },
     methods: {
-        openAvatarPicker () {
-            this.showAvatarPicker = true
-        },
-        selectAvatar (avatar) {
-            this.form.avatar = avatar
+        onFileChange(files){
+            const image = files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{
+                this.updatedImage = e.target.result;
+                console.log(this.updatedImage);
+                this.updateImageBtnText = 'Сохранить'
+            };
         }
     },
     computed: {
@@ -130,7 +141,8 @@ export default {
 </script>
 
 <style scoped>
-    .layout{
+    .column-card{
+        padding: 25px 15px;
         height: 100%;
         overflow-y: scroll;
     }

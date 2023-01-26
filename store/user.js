@@ -48,7 +48,6 @@ export const mutations = {
         state.user.list[payload.currentPageId].todayDay = Number(payload.count)
     },
     CHANGE_LIST_BY_ID(state, {listId, listName, listColor, listDays}){
-        console.log('listId', listId)
         const currentList = state.user.list[listId];
         if(currentList.name !== null) currentList.name = listName;
         if(currentList.color !== null) currentList.color = listColor;
@@ -101,7 +100,6 @@ export const actions = {
                 dispatch('logOut');
                 return
             }
-            console.log(id);
             dispatch('logIn', {user, id});
         }
 

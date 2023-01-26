@@ -9,7 +9,8 @@
             name="login"
             label="Логин"
             required
-            v-model.trim="$v.user.login.$model"
+            :value="currentUser.name"
+            v-model.trim="$v.currentUser.login.$model"
         />
         <v-text-field
             class="mt-4"
@@ -19,7 +20,7 @@
             name="password"
             label="Пароль"
             required
-            v-model.trim="$v.user.password.$model"
+            v-model.trim="$v.currentUser.password.$model"
             @click:append="showPassword = !showPassword"/>
         <v-text-field
             class="mt-4"
@@ -29,7 +30,7 @@
             name="password-repeat"
             label="Повторить пороль"
             required
-            v-model="$v.user.repeatPassword.$model"
+            v-model="$v.currentUser.repeatPassword.$model"
             @click:append="showPassword = !showPassword"/>
         <v-text-field
             :error-messages="emailErrors"
@@ -37,7 +38,7 @@
             label="E-mail"
             type="email"
             required
-            v-model="$v.user.email.$model"
+            v-model="$v.currentUser.email.$model"
         />
         <h4>Дополнительная информация</h4>
         <v-text-field name="name" label="Ваше имя" v-model="user.name"/>
@@ -66,7 +67,7 @@
 <script>
 import {validationMixin} from "vuelidate";
 import {required, email, sameAs} from "vuelidate/lib/validators";
-import {mapActions} from "vuex";
+import {mapActions, mapState} from "vuex";
 import {mask} from 'vue-the-mask';
 
 export default {
@@ -74,7 +75,7 @@ export default {
     mixins: [validationMixin],
     directives: {mask},
     validations: {
-        user: {
+        currentUser: {
             login: {required,},
             password: {required},
             repeatPassword: {
@@ -89,41 +90,42 @@ export default {
 
     },
     data: () => ({
+        ...mapState('user', ['user']),
         showError: false,
         showPassword: false,
-        user: {
-            login: '',
-            password: '',
+        currentUser: {
+            login: this.user.login,
+            password: this.user.password,
             repeatPassword: '',
-            email: '',
-            name: '',
-            preName: '',
-            birth: ''
+            email: this.user.email,
+            name: this.user.name,
+            preName: this.user.preName,
+            birth: this.user.birth
         }
     }),
     computed: {
         nameErrors() {
             const errors = [];
-            if (!this.$v.user.login.$dirty) return errors;
-            if (!this.$v.user.login.required) errors.push('Без логина не зарегистрироваться');
+            if (!this.$v.currentUser.login.$dirty) return errors;
+            if (!this.$v.currentUser.login.required) errors.push('Без логина не зарегистрироваться');
             return errors
         },
         passwordErrors() {
             const errors = [];
-            if (!this.$v.user.password.$dirty) return errors;
-            if (!this.$v.user.password.required) errors.push('Пароль не заполнен');
+            if (!this.$v.currentUser.password.$dirty) return errors;
+            if (!this.$v.currentUser.password.required) errors.push('Пароль не заполнен');
             return errors;
         },
         repeatPasswordErrors() {
             const errors = [];
-            if (!this.$v.user.repeatPassword.sameAsPassword) errors.push('Пароли должны совпадать');
+            if (!this.$v.currentUser.repeatPassword.sameAsPassword) errors.push('Пароли должны совпадать');
             return errors;
         },
         emailErrors() {
             const errors = [];
-            if (!this.$v.user.email.$dirty) return errors;
-            if (!this.$v.user.email.email) errors.push('Необходима корректная почта для регистрации');
-            if (!this.$v.user.email.required) errors.push('Нужна почта');
+            if (!this.$v.currentUser.email.$dirty) return errors;
+            if (!this.$v.currentUser.email.email) errors.push('Необходима корректная почта для регистрации');
+            if (!this.$v.currentUser.email.required) errors.push('Нужна почта');
             return errors
         },
     },
@@ -136,22 +138,16 @@ export default {
             if (!this.$v.$invalid) {
                 const user = {
                     id: 2,
-                    login: this.user.login,
-                    password: this.user.password,
+                    login: this.currentUser.login,
+                    password: this.currentUser.password,
                     name: this.name || '',
                     preName: this.preName || '',
                     email: this.email,
                     birth: this.birth || '',
                     list: null
                 }
-                console.log(user)
-                this.addNewUser(user)
-                // const isAuth = await this.logIn(this.user);
-                // if (isAuth) {
-                //     this.$router.push('/dashboard');
-                // } else {
-                //     this.showError = true;
-                // }
+                //this.addNewUser(user)
+
             }
         }
     },

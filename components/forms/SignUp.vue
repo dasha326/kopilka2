@@ -141,7 +141,6 @@ export default {
                     img: null,
                     list: null
                 }
-                console.log(user)
                 this.addNewUser(user)
                 // const isAuth = await this.logIn(this.user);
                 // if (isAuth) {
