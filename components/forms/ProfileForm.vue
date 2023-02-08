@@ -1,7 +1,7 @@
 <template>
     <v-form
         ref="form"
-        @submit.prevent=""
+        @submit.prevent="submitNewData()"
     >
         <v-text-field
             class="mt-4"
@@ -9,29 +9,8 @@
             name="login"
             label="Логин"
             required
-            :value="currentUser.name"
             v-model.trim="$v.currentUser.login.$model"
         />
-        <v-text-field
-            class="mt-4"
-            :error-messages="passwordErrors"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
-            name="password"
-            label="Пароль"
-            required
-            v-model.trim="$v.currentUser.password.$model"
-            @click:append="showPassword = !showPassword"/>
-        <v-text-field
-            class="mt-4"
-            :error-messages="repeatPasswordErrors"
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :type="showPassword ? 'text' : 'password'"
-            name="password-repeat"
-            label="Повторить пороль"
-            required
-            v-model="$v.currentUser.repeatPassword.$model"
-            @click:append="showPassword = !showPassword"/>
         <v-text-field
             :error-messages="emailErrors"
             name="email"
@@ -41,14 +20,14 @@
             v-model="$v.currentUser.email.$model"
         />
         <h4>Дополнительная информация</h4>
-        <v-text-field name="name" label="Ваше имя" v-model="user.name"/>
+        <v-text-field name="name" label="Ваше имя" v-model="currentUser.name"/>
         <v-text-field
             name="prename"
             label="Как к вам обращаться"
             placeholde="Госпожа / Господин"
-            v-model="user.preName"/>
+            v-model="currentUser.preName"/>
         <v-text-field
-            v-model="user.birth"
+            v-model="currentUser.birth"
             name="birth"
             type="tel"
             v-mask="['##.##.####']"
@@ -59,15 +38,71 @@
             color="purple"
             class="mt-4"
         >
-            Создать
+            Сохранить
         </v-btn>
+        <v-btn
+            type="button"
+            color="error"
+            class="mt-4"
+            @click.stop="passwordDialog = true"
+        >
+            Сменить пароль
+        </v-btn>
+        <v-dialog
+            v-model="passwordDialog"
+            max-width="500"
+        >
+            <v-card>
+                <v-toolbar color="primary" class="pl-5 pr-5">Сменить пароль</v-toolbar>
+                <v-card-text>
+                    <v-text-field
+                        class="mt-4"
+                        :error-messages="oldPasswordErrors"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="password"
+                        label="Старый пароль"
+                        required
+                        v-model.trim="$v.oldPassword.$model"
+                        @click:append="showPassword = !showPassword"/>
+                    <v-text-field
+                        class="mt-4"
+                        :error-messages="newPasswordErrors"
+                        :append-icon="showPassword2 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPassword2 ? 'text' : 'password'"
+                        name="password"
+                        label="Новый пароль"
+                        required
+                        v-model.trim="$v.newPassword.$model"
+                        @click:append="showPassword2 = !showPassword2"/>
+                    <v-text-field
+                        class="mt-4"
+                        :error-messages="repeatNewPasswordErrors"
+                        :append-icon="showPassword3 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPassword3 ? 'text' : 'password'"
+                        name="password-repeat"
+                        label="Повторить пороль"
+                        required
+                        v-model="$v.repeatNewPassword.$model"
+                        @click:append="showPassword3 = !showPassword3"/>
+                    <v-btn
+                        type="button"
+                        color="purple"
+                        class="mt-4"
+                        @click="submitNewData()"
+                    >
+                        Сохранить
+                    </v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-form>
 </template>
 
 <script>
 import {validationMixin} from "vuelidate";
 import {required, email, sameAs} from "vuelidate/lib/validators";
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import {mask} from 'vue-the-mask';
 
 export default {
@@ -77,48 +112,60 @@ export default {
     validations: {
         currentUser: {
             login: {required,},
-            password: {required},
-            repeatPassword: {
-                //sameAsPassword: sameAs('user.password')
-                sameAsPassword: sameAs( function(){return this.user.password} )
-            },
             email: {
                 required ,
                 email
             }
-        }
-
+        },
+        oldPassword: {},
+        newPassword: {},
+        repeatNewPassword: {
+            sameAsPassword: sameAs( function(){return this.newPassword} )
+        },
     },
     data: () => ({
-        ...mapState('user', ['user']),
         showError: false,
         showPassword: false,
-        currentUser: {
-            login: this.user.login,
-            password: this.user.password,
-            repeatPassword: '',
-            email: this.user.email,
-            name: this.user.name,
-            preName: this.user.preName,
-            birth: this.user.birth
-        }
+        showPassword2: false,
+        showPassword3: false,
+        currentUser: {},
+        oldPassword: '',
+        newPassword: null,
+        repeatNewPassword: null,
+        passwordDialog: false
     }),
+    watch: {
+        user: {
+            immediate: true,
+            handler(newValue) {
+                if(newValue) {
+                    this.currentUser = Object.assign(this.currentUser, newValue);
+                }
+            }
+        }
+    },
     computed: {
+        ...mapState('user', ['user']),
         nameErrors() {
             const errors = [];
             if (!this.$v.currentUser.login.$dirty) return errors;
-            if (!this.$v.currentUser.login.required) errors.push('Без логина не зарегистрироваться');
+            if (!this.$v.currentUser.login.required) errors.push('Логин должен быть заполнен');
             return errors
         },
-        passwordErrors() {
+        oldPasswordErrors() {
             const errors = [];
-            if (!this.$v.currentUser.password.$dirty) return errors;
-            if (!this.$v.currentUser.password.required) errors.push('Пароль не заполнен');
+            if (!this.$v.oldPassword.$dirty) return errors;
+            if (this.oldPassword !== this.user.password) errors.push('Старый пароль не верен');
             return errors;
         },
-        repeatPasswordErrors() {
+        newPasswordErrors() {
             const errors = [];
-            if (!this.$v.currentUser.repeatPassword.sameAsPassword) errors.push('Пароли должны совпадать');
+            if (!this.$v.newPassword.$dirty) return errors;
+            return errors;
+        },
+        repeatNewPasswordErrors() {
+            const errors = [];
+            if (!this.$v.repeatNewPassword.sameAsPassword) errors.push('Пароли должны совпадать');
             return errors;
         },
         emailErrors() {
@@ -130,24 +177,17 @@ export default {
         },
     },
     methods: {
-        ...mapActions('user', ['addNewUser']),
+        ...mapActions('user', ['changeUser']),
 
-        async submitData() {
+        async submitNewData() {
             this.showError = false;
             this.$v.$touch();
             if (!this.$v.$invalid) {
-                const user = {
-                    id: 2,
-                    login: this.currentUser.login,
-                    password: this.currentUser.password,
-                    name: this.name || '',
-                    preName: this.preName || '',
-                    email: this.email,
-                    birth: this.birth || '',
-                    list: null
-                }
-                //this.addNewUser(user)
-
+                const user = Object.assign(this.currentUser, this.user, {password: this.newPassword || this.user.password});
+                console.log(this.currentUser)
+                console.log(user)
+                this.passwordDialog = false
+                this.changeUser(user)
             }
         }
     },

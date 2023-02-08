@@ -7,7 +7,7 @@
                     class="mx-auto"
                 >
                     <v-img
-                        :src="currentUserImage"
+                        :src="updatedImage"
                         height="310px"
                         dark
                     ></v-img>
@@ -65,10 +65,6 @@
             <v-col>
                 <v-card-text>
                     <v-flex class="mb-4">
-                        <v-avatar size="96" class="mr-4">
-                            <img :src="updatedImage" alt="Avatar">
-                        </v-avatar>
-                        <button></button>
                         <v-btn>
                             <input id="file"
                                    type="file"
@@ -79,13 +75,14 @@
                             <label for="file" >{{updateImageBtnText}}</label>
                         </v-btn>
                     </v-flex>
+                    <ProfileForm/>
                     <v-expansion-panels>
                         <v-expansion-panel>
                             <v-expansion-panel-header>
                                 Изменить информацию о себе
                             </v-expansion-panel-header>
                             <v-expansion-panel-content>
-<!--                                <ProfileForm/>-->
+                                 555
                             </v-expansion-panel-content>
                         </v-expansion-panel>
                     </v-expansion-panels>
@@ -96,7 +93,7 @@
 </template>
 
 <script>
-import ProfileForm from "@/components/forms/ProfileForm";
+import ProfileForm from "~/components/forms/ProfileForm";
 import {mapGetters, mapState} from "vuex";
 export default {
     name: "profile",
@@ -125,6 +122,7 @@ export default {
         ...mapState('user', ['isAuth', 'user']),
         ...mapGetters('user', ['userName', 'userImage']),
         currentUser(){
+            console.log(33);
             return this.user;
         },
         userIsAuth() {

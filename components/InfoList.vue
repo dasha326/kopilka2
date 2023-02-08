@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {pluralFormat, formatMoney, calcTotal} from '@/tools'
+import {pluralFormat, formatMoney, calcTotal} from '~/tools'
     export default {
         name: "InfoList",
         props: {

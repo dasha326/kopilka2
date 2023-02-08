@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import TheList from "@/components/TheList";
+import TheList from "~/components/TheList";
 
 export default {
     name: "DashboardView",

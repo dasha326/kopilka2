@@ -1,4 +1,4 @@
-import {setCookie} from "@/tools";
+import {setCookie} from "~/tools";
 export const state = () => ({
     isAuth: false,
     user: null,
@@ -111,5 +111,8 @@ export const actions = {
     addNewUser({dispatch}, user) {
         dispatch('logIn', {user, id: 2});
         this.$router.push('/dashboard')
+    },
+    changeUser({commit}, user) {
+        commit('SET_USER', user)
     }
 };
