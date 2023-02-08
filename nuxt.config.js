@@ -5,7 +5,7 @@ export default {
     target: 'static',
     ssr: false,
     router: {
-        base: '/kopilka2/'
+        base: '/kopilka2/dist/'
     },
     loading: {
         color: 'blue',
