@@ -26,6 +26,7 @@ export const getters = {
             } else {
                 img = '/no-avatar.svg';
             }
+            console.log(img)
             return img
         }
     },

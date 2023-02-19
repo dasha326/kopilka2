@@ -8,7 +8,7 @@ export default {
         base: '/kopilka2/'
     },
     loading: {
-        color: 'blue',
+        color: 'purple',
         height: '5px'
     },
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -74,5 +74,9 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {}
+    build: {
+        build: {
+            publicPath: '/static/'
+        }
+    }
 }

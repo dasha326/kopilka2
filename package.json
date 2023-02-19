@@ -2,6 +2,7 @@
     "name": "kopilka2",
     "version": "1.0.0",
     "private": "false",
+    "homepage": "https://dasha326.github.io/kopilka2/",
     "scripts": {
         "dev": "nuxt",
         "build": "nuxt build",

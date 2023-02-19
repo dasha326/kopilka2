@@ -184,8 +184,6 @@ export default {
             this.$v.$touch();
             if (!this.$v.$invalid) {
                 const user = Object.assign(this.currentUser, this.user, {password: this.newPassword || this.user.password});
-                console.log(this.currentUser)
-                console.log(user)
                 this.passwordDialog = false
                 this.changeUser(user)
             }

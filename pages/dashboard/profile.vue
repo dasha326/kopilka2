@@ -76,16 +76,6 @@
                         </v-btn>
                     </v-flex>
                     <ProfileForm/>
-                    <v-expansion-panels>
-                        <v-expansion-panel>
-                            <v-expansion-panel-header>
-                                Изменить информацию о себе
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                                 555
-                            </v-expansion-panel-content>
-                        </v-expansion-panel>
-                    </v-expansion-panels>
                 </v-card-text>
             </v-col>
         </v-row>
@@ -101,7 +91,7 @@ export default {
     components: {ProfileForm},
     data () {
         return {
-            updatedImage: this.currentUserImage,
+            updatedImage: null,
             updateImageBtnText: 'Изменить аватар'
         }
     },
@@ -112,9 +102,18 @@ export default {
             reader.readAsDataURL(image);
             reader.onload = e =>{
                 this.updatedImage = e.target.result;
-                console.log(this.updatedImage);
                 this.updateImageBtnText = 'Сохранить'
             };
+        }
+    },
+    watch: {
+        userImage: {
+            immediate: true,
+            handler(newValue) {
+                if(newValue) {
+                    this.updatedImage = newValue
+                }
+            }
         }
     },
     computed: {
@@ -122,7 +121,6 @@ export default {
         ...mapState('user', ['isAuth', 'user']),
         ...mapGetters('user', ['userName', 'userImage']),
         currentUser(){
-            console.log(33);
             return this.user;
         },
         userIsAuth() {
@@ -130,9 +128,6 @@ export default {
         },
         currentUserName() {
             return this.userName;
-        },
-        currentUserImage(){
-            return this.userImage;
         },
     }
 }
